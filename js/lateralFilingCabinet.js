@@ -1,4 +1,16 @@
-var scene, camera, renderer;
+var scene, camera, renderer, cube;
+
+//Create Stats
+function createStats(){
+    var stats = new Stats();
+    stats.setMode(0);
+
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0';
+    stats.domElement.style.top = '0';
+
+    return stats;
+}
 
 function init(){
 
@@ -33,8 +45,29 @@ function init(){
     var ambientLight = new THREE.AmbientLight(0xEEEEEE, 1);
     scene.add(ambientLight);
 
+    //Add Stats to Scene
+    stats = createStats();
+
+    //orientation Cube
+    var cubeGeometry = new THREE.BoxGeometry(.05,.05,.05);
+    var cubeMaterial = new THREE.MeshLambertMaterial( {color: 0x111111, transparent: true, opacity: 0} );
+    cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
+    scene.add( cube );
+    cube.position.set(-0.02, 1.2, 2);
+
+    document.body.appendChild( stats.domElement );
+    document.body.appendChild(renderer.domElement);
+
+    animate();
+
 }
 
 function animate(){
 
+    stats.update();
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+
 }
+
+window.onload = init;
