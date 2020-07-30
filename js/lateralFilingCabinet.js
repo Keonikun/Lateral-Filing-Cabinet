@@ -16,7 +16,7 @@ function init(){
 
     //Basic setup
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(20, window.innerHeight/window.innerWidth, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(20, window.innerWidth/window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer();
 
     //setup renderer
@@ -33,27 +33,62 @@ function init(){
     plane.rotation.x -= Math.PI /2;
 
     //Position Three.js Camera
-    camera.position.set(0, 2.4, -5);
+    camera.position.set(0,0.4,2);
+    camera.rotation.x = -0.14
 
     //Add Directional Light
     var spotLight = new THREE.DirectionalLight(0xffffff, 0.6, 18);
-    spotLight.position.set(-3,6,-3);
+    spotLight.position.set(0,3,1);
     spotLight.castShadow = true;
+    spotLight.rotation.x = 1;
     scene.add(spotLight);
 
-    //Add Ambient Light
-    var ambientLight = new THREE.AmbientLight(0xEEEEEE, 1);
-    scene.add(ambientLight);
+    // //Add Ambient Light
+    // var ambientLight = new THREE.AmbientLight(0xEEEEEE, 1);
+    // scene.add(ambientLight);
 
     //Add Stats to Scene
     stats = createStats();
 
-    //orientation Cube
-    var cubeGeometry = new THREE.BoxGeometry(.05,.05,.05);
-    var cubeMaterial = new THREE.MeshLambertMaterial( {color: 0x111111, transparent: true, opacity: 0} );
-    cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
-    scene.add( cube );
-    cube.position.set(-0.02, 1.2, 2);
+    // //orientation Cube
+    // var cubeGeometry = new THREE.BoxGeometry(.05,.05,.05);
+    // var cubeMaterial = new THREE.MeshLambertMaterial( {color: 0x00FFFF} );
+    // cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
+    // scene.add( cube );
+    // cube.castShadow = true;
+    // cube.position.set(0,0.05,0);
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.load('assets/MTL/cabinetStasis.mtl', function( cabinetStasisMTL ){
+
+        cabinetStasisMTL.preload();
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials(cabinetStasisMTL);
+
+        objLoader.load('assets/OBJ/cabinetStasis.obj', function ( cabinetStasis ) {
+            scene.add( cabinetStasis );
+            cabinetStasis.scale.set (0.1,0.1,0.1)
+            cabinetStasis.rotation.y = Math.PI * 1.5;
+            cabinetStasis.position.y = 0.146;
+        });
+
+    });
+    
+    mtlLoader.load('assets/MTL/cabinetAnim.mtl', function( cabinetAnimMTL ){
+
+        cabinetAnimMTL.preload();
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials(cabinetAnimMTL);
+
+        objLoader.load('assets/OBJ/cabinetAnim.obj', function ( cabinetAnim ) {
+            scene.add( cabinetAnim );
+            cabinetAnim.scale.set (0.1,0.1,0.1)
+            cabinetAnim.rotation.y = Math.PI * 1.5;
+            cabinetAnim.position.y = 0.146;
+        });
+
+    });
+
 
     document.body.appendChild( stats.domElement );
     document.body.appendChild(renderer.domElement);
@@ -63,6 +98,9 @@ function init(){
 }
 
 function animate(){
+
+    // cube.rotation.y += 0.01;
+    // cube.rotation.x += 0.01;
 
     stats.update();
     requestAnimationFrame(animate);
