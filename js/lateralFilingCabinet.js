@@ -85,6 +85,7 @@ function init(){
             cabinetAnim.scale.set (0.1,0.1,0.1)
             cabinetAnim.rotation.y = Math.PI * 1.5;
             cabinetAnim.position.y = 0.146;
+            cabinetAnim.position.z = 0.2;
         });
 
     });
